@@ -4,10 +4,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	)
 	
-	type Posts struct {
+	type Echoes struct {
 	ID       primitive.ObjectID  
-	Title    string 			 `json:"title" bson:"title"`
-	Article  string  		     `json:"article" bson:"article"`
+	Echo    string 			 `json:"echo" bson:"echo"`
+	Book  	string  		 `json:"book" bson:"book"`
+	Author  string  		 `json:"author" bson:"author"`
 	}
 
 

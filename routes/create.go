@@ -12,33 +12,34 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreatePost(c *gin.Context) {
+func CreateEcho(c *gin.Context) {
 var DB = database.ConnectDB()
-var postCollection = getcollection.GetCollection(DB, "Posts")
+var echoCollection = getcollection.GetCollection(DB, "Echoes")
 ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-post := new(model.Posts)
+echo := new(model.Echoes)
 defer cancel()
 
-if err := c.BindJSON(&post); err != nil {
+if err := c.BindJSON(&echo); err != nil {
 c.JSON(http.StatusBadRequest, gin.H{"message": err})
 log.Fatal(err)
 return
 }
 
-postPayload := model.Posts {
+echoPayload := model.Echoes {
 	ID: primitive.NewObjectID(),
-	Title: post.Title,
-	Article: post.Article,
+	Echo: echo.Echo,
+	Book: echo.Book,
+	Author: echo.Author,
 	}
 
-result, err := postCollection.InsertOne(ctx, postPayload)
+result, err := echoCollection.InsertOne(ctx, echoPayload)
 
 if err != nil {
 c.JSON(http.StatusInternalServerError, gin.H{"message": err})
 return
 }
 
-c.JSON(http.StatusCreated, gin.H{"message": "Posted successfully", "Data": map[string]interface{}{"data": result}})
+c.JSON(http.StatusCreated, gin.H{"message": "Echo created", "Data": map[string]interface{}{"data": result}})
 
 }
 

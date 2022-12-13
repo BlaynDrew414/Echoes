@@ -12,19 +12,19 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ReadOnePost(c *gin.Context) {
+func ReadOneEcho(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var DB = database.ConnectDB()
-	var postCollection = getcollection.GetCollection(DB, "Posts")
+	var echoCollection = getcollection.GetCollection(DB, "Echoes")
 	
-	postId := c.Param("postId")
-	var result model.Posts
+	echoId := c.Param("echoId")
+	var result model.Echoes
 	
 	defer cancel()
 	
-	objId, _ := primitive.ObjectIDFromHex(postId)
+	objId, _ := primitive.ObjectIDFromHex(echoId)
 	
-	err := postCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&result)
+	err := echoCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&result)
 	
 	res := map[string]interface{}{"data": result}
 	

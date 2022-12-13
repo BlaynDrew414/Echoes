@@ -13,27 +13,27 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func UpdatePost(c *gin.Context) {
+func UpdateEcho(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10 * time.Second)
 	var DB = database.ConnectDB()
-	var postCollection = getcollection.GetCollection(DB, "Posts")
+	var echoCollection = getcollection.GetCollection(DB, "Echoes")
 
-	postId := c.Param("postId")
-	var post model.Posts
+	echoId := c.Param("echoId")
+	var echo model.Echoes
 	
 	defer cancel()
 
 
-	objId, _ := primitive.ObjectIDFromHex(postId)
+	objId, _ := primitive.ObjectIDFromHex(echoId)
 
-	if err := c.BindJSON(&post); err != nil {
+	if err := c.BindJSON(&echo); err != nil {
 		c.JSON (http.StatusInternalServerError, gin.H{"message": err})
 		return 
 	}
 
-	edited := bson.M{"title": post.Title, "article": post.Article}
+	edited := bson.M{"echo": echo.Echo, "book": echo.Book, "author": echo.Author}
 	
-	result, err := postCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": edited})
+	result, err := echoCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": edited})
 
 	res := map [string]interface{}{"data": result}
 
@@ -47,5 +47,5 @@ func UpdatePost(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "data updated sucessfully!", "Data": res})
+	c.JSON(http.StatusCreated, gin.H{"message": "echo updated", "Data": res})
 }

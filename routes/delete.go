@@ -13,15 +13,15 @@ import (
 
 
 
-func DeletePost(c *gin.Context) {
+func DeleteEcho(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var DB = database.ConnectDB()
-	postId := c.Param("postId")
+	echoId := c.Param("echoId")
 		
-		var postCollection = getcollection.GetCollection(DB, "Posts")
+		var echoCollection = getcollection.GetCollection(DB, "Echoes")
 		defer cancel()
-		objId, _ := primitive.ObjectIDFromHex(postId)
-		result, err := postCollection.DeleteOne(ctx, bson.M{"id": objId})
+		objId, _ := primitive.ObjectIDFromHex(echoId)
+		result, err := echoCollection.DeleteOne(ctx, bson.M{"id": objId})
 		res := map[string]interface{}{"data": result}
 		
 		if err != nil {
@@ -34,7 +34,7 @@ func DeletePost(c *gin.Context) {
 			return
 			}
 		
-		c.JSON(http.StatusCreated, gin.H{"message": "Article deleted successfully", "Data": res})
+		c.JSON(http.StatusCreated, gin.H{"message": "Echo deleted", "Data": res})
 }
 		
 	
